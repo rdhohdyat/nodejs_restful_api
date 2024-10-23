@@ -1,15 +1,7 @@
-import {prismaClient} from "../application/database.js";
 import productService from "../service/product.service.js";
 
 export const getAllProducts = async (req, res) => {
     const products = await productService.getAllProducts()
-
-    if (products.length > 0) {
-        return res.status(200).json({
-            status: "success",
-            message: "product is empty"
-        })
-    }
 
     if (!products) {
         return res.status(404).json({

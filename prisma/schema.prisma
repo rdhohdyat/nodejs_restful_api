@@ -12,6 +12,7 @@ model User {
   name      String
   password  String
   role      String
+  token     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Sales     Sale[]
@@ -30,7 +31,7 @@ model Product {
   name        String
   description String?
   price       Int
-  stock       Int
+  image       String
   categoryId  Int
   category    Category   @relation(fields: [categoryId], references: [id])
   saleItems   SaleItem[]

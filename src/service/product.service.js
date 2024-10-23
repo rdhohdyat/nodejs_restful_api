@@ -1,9 +1,13 @@
 import {prismaClient} from "../application/database.js";
-import {productValidation} from "../validation/product.validaton.js";
+import {productValidation} from "../validation/product.validation.js";
 import {validate} from "../validation/validation.js";
 
 const getAllProducts = async () => {
-    const products = await prismaClient.product.findMany();
+    const products = await prismaClient.product.findMany({
+        include: {
+            category : true
+        }
+    });
 
     if(!products) return [];
 

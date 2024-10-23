@@ -2,7 +2,7 @@ import {validate} from "../validation/validation.js";
 import {registerUserValidation, loginUserValidation} from "../validation/user.validation.js";
 import {prismaClient} from "../application/database.js";
 import bcrypt from "bcrypt";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
 const getAllUsers = async () => {
     return prismaClient.user.findMany();
@@ -50,7 +50,6 @@ const login = async (request) => {
     if (!passwordIsMatch) {
         throw new Error("username or password is wrong");
     }
-
 
     const tokenGenerate = uuidv4()
 
