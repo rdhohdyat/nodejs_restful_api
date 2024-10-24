@@ -5,7 +5,7 @@ import categoryRouter from "../route/category.route.js";
 import saleRouter from "../route/sale.route.js";
 import cors from "cors";
 
-const app = express();
+export const app = express();
 app.use(express.json());
 
 app.use(cors());
