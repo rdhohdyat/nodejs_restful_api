@@ -1,12 +1,13 @@
-import {prismaClient} from "../application/database.js";
-import {validate} from "../validation/validation.js";
-import {saleValidation} from "../validation/sale.validation.js";
+import { prismaClient } from "../application/database.js";
+import { validate } from "../validation/validation.js";
+import { saleValidation } from "../validation/sale.validation.js";
+
 
 const createSale = async (request) => {
     const sale = await validate(saleValidation, request);
 
     if (!sale) {
-        throw new Error("Bad request");
+        throw new Error("Bad request: Sale data is invalid");
     }
 
     const createdSale = await prismaClient.sale.create({
@@ -14,7 +15,6 @@ const createSale = async (request) => {
             username: sale.username,
             totalAmount: sale.totalAmount,
             paymentMethod: sale.paymentMethod,
-            status: sale.status,
         },
     });
 
@@ -29,19 +29,25 @@ const createSale = async (request) => {
     });
 
     return {
+        id: createdSale.id,
+        username: createdSale.username,
         totalAmount: createdSale.totalAmount,
-        status: createdSale.status,
         paymentMethod: createdSale.paymentMethod,
     };
 };
 
+// Get all sales
 const getAllSales = async () => {
-    const sales = await prismaClient.sale.findMany();
+    const sales = await prismaClient.sale.findMany({
+        include: {
+            saleItems: true,  // Include related sale items
+        },
+    });
 
     return sales || [];
 }
 
 export default {
     createSale,
-    getAllSales
+    getAllSales,
 };

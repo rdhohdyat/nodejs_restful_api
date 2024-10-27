@@ -3,15 +3,14 @@ import {productValidation} from "../validation/product.validation.js";
 import {validate} from "../validation/validation.js";
 
 const getAllProducts = async () => {
+
     const products = await prismaClient.product.findMany({
         include: {
             category : true
         }
     });
 
-    if(!products) return [];
-
-    return products;
+    return products || []
 }
 
 const createProduct = async (request) => {
@@ -30,13 +29,7 @@ const createProduct = async (request) => {
 const updateProduct = async (request, id) => {
     const product = validate(productValidation, request)
 
-    const productIsExists = await prismaClient.product.findUnique({
-        where : {
-            id: Number(id)
-        }
-    })
-
-    if(productIsExists) {
+    if(product){
         return prismaClient.product.update({
             data : product,
             where : {
@@ -65,10 +58,6 @@ const deleteProduct = async (id) => {
 }
 
 const detailProduct = async (id) => {
-
-    if(typeof id !== "number"){
-        throw new Error("Product id must be a number");
-    }
 
     const product = await  prismaClient.product.findUnique({
         where : {

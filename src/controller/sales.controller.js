@@ -1,21 +1,20 @@
 import salesService from '../service/sale.service.js'
 
 export const createSale = async (req, res) => {
-    const sale = await salesService.createSale(req.body)
+    try {
+        const sale = await salesService.createSale(req.body)
 
-    if(!sale) {
-        return res.status(400).json({
-            status: 'error',
+        return res.status(200).json({
+            status: "success",
+            message: "create sale is successfully",
+            data: sale
+        })
+    }catch(err) {
+        res.status(400).json({
             message: 'create sale is failed',
-            error: 'bad request',
+            error: err.message,
         })
     }
-
-    return res.status(200).json({
-        status: "success",
-        message: "create sale is successfully",
-        data: sale
-    })
 }
 
 export const getAllSales = async (req, res) => {

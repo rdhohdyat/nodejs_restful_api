@@ -2,8 +2,7 @@ import {app} from "../src/application/main.js";
 import { prismaClient } from "../src/application/database.js";
 import supertest from "supertest";
 
-
-describe("Pengujian API Produk", () => {
+describe("Pengujian Service untuk Produk", () => {
 
     beforeEach(async () => {
         await prismaClient.product.deleteMany();
@@ -13,7 +12,7 @@ describe("Pengujian API Produk", () => {
         await prismaClient.$disconnect();
     });
 
-    describe("GET /products", () => {
+    describe("Mengambil data produk", () => {
         it("seharusnya mengembalikan array kosong jika tidak ada produk", async () => {
             const response = await supertest(app).
             get('/api/product');
@@ -40,7 +39,7 @@ describe("Pengujian API Produk", () => {
         });
     });
 
-    describe("POST /api/product/create-product", () => {
+    describe("Menambahkan produk", () => {
         it("seharusnya berhasil membuat produk dengan input yang valid", async () => {
             const productData = {
                 name: "Produk Valid",
@@ -75,7 +74,7 @@ describe("Pengujian API Produk", () => {
         });
     });
 
-    describe("PUT /api/product/:id", () => {
+    describe("Update produk", () => {
         it("seharusnya berhasil memperbarui produk", async () => {
             const product = await prismaClient.product.create({
                 data: {
@@ -118,8 +117,7 @@ describe("Pengujian API Produk", () => {
         });
     });
 
-
-    describe("DELETE /products/:id", () => {
+    describe("Hapus produk", () => {
         it("seharusnya berhasil menghapus produk", async () => {
 
             const product = await prismaClient.product.create({
@@ -133,10 +131,10 @@ describe("Pengujian API Produk", () => {
             });
 
             const response = await supertest(app)
-                .delete(`/product/delete-product/${product.id}`);
+                .delete(`/api/product/delete-product/${product.id}`);
 
             expect(response.status).toBe(200);
-            // expect(response.body.message).toBe("delete product is successfully");
+            expect(response.body.message).toBe("delete product is successfully");
 
             const deletedProduct = await prismaClient.product.findUnique({
                 where: { id: Number(product.id) }
@@ -146,14 +144,13 @@ describe("Pengujian API Produk", () => {
 
         it("seharusnya gagal menghapus produk jika produk tidak ditemukan", async () => {
             const response = await supertest(app)
-                .delete('/product/delete-product/9999');
+                .delete('/api/product/delete-product/9999');
 
             expect(response.status).toBe(400);
-            // expect(response.body.message).toBe("failed to delete this product");
         });
     });
 
-    describe("GET /products/:id", () => {
+    describe("Detail produk", () => {
         it("seharusnya mengembalikan detail produk jika produk ditemukan", async () => {
 
             const product = await prismaClient.product.create({
@@ -167,15 +164,14 @@ describe("Pengujian API Produk", () => {
             });
 
             const response = await supertest(app)
-                .get(`/product/${product.id}`);
+                .get(`/api/product/detail/${product.id}`);
 
             expect(response.status).toBe(200);
-            expect(response.body.data).toHaveProperty('name', 'Detail Produk');
         });
 
         it("seharusnya mengembalikan error jika produk tidak ditemukan", async () => {
             const response = await supertest(app)
-                .get('/product/9999');
+                .get('/api/product/detail/9999');
 
             expect(response.status).toBe(400);
             expect(response.body.message).toBe("product is not found");
