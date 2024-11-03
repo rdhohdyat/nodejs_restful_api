@@ -48,7 +48,7 @@ describe("Pengujian service untuk Sale", () => {
     });
 
     describe("Menambahkan sale", () => {
-        it("seharusnya berhasil membuat sale dengan input yang valid", async () => {
+        test("seharusnya berhasil membuat sale dengan input yang valid", async () => {
             const saleData = {
                 username: user.username,
                 totalAmount: 50000,
@@ -70,7 +70,7 @@ describe("Pengujian service untuk Sale", () => {
             expect(response.status).toBe(200);
         });
 
-        it("seharusnya gagal membuat penjualan jika input tidak valid", async () => {
+        test("seharusnya gagal membuat penjualan jika input tidak valid", async () => {
             const invalidSaleData = {
                 username: "",
                 totalAmount: -50000,
@@ -87,7 +87,7 @@ describe("Pengujian service untuk Sale", () => {
     });
 
     describe("Menampilkan data sale", () => {
-        it("seharusnya mengembalikan daftar penjualan", async () => {
+        test("seharusnya mengembalikan daftar penjualan", async () => {
             const response = await supertest(app)
                 .get('/api/sale');
 

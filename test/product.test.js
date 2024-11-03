@@ -13,15 +13,15 @@ describe("Pengujian Service untuk Produk", () => {
     });
 
     describe("Mengambil data produk", () => {
-        it("seharusnya mengembalikan array kosong jika tidak ada produk", async () => {
+        test("seharusnya mengembalikan array kosong jika tidak ada produk", async () => {
             const response = await supertest(app).
             get('/api/product');
             expect(response.status).toBe(200);
             expect(response.body.data).toEqual([]);
         });
 
-        it("seharusnya mengembalikan daftar produk", async () => {
-            // Tambahkan produk ke database
+        test("seharusnya mengembalikan daftar produk", async () => {
+
             await prismaClient.product.create({
                 data: {
                     name: "Produk 1",
@@ -34,13 +34,14 @@ describe("Pengujian Service untuk Produk", () => {
 
             const response = await supertest(app).get('/api/product');
             expect(response.status).toBe(200);
+
             expect(response.body.data.length).toBe(1);
             expect(response.body.data[0]).toHaveProperty('name', 'Produk 1');
         });
     });
 
     describe("Menambahkan produk", () => {
-        it("seharusnya berhasil membuat produk dengan input yang valid", async () => {
+        test("seharusnya berhasil membuat produk dengan input yang valid", async () => {
             const productData = {
                 name: "Produk Valid",
                 description: "Deskripsi Produk Valid",
@@ -58,7 +59,7 @@ describe("Pengujian Service untuk Produk", () => {
             expect(response.body.data).toHaveProperty('price', 25000);
         });
 
-        it("seharusnya gagal membuat produk jika input tidak valid", async () => {
+        test("seharusnya gagal membuat produk jika input tidak valid", async () => {
             const response = await supertest(app)
                 .post('/api/product/create-product')
                 .send({
@@ -75,7 +76,7 @@ describe("Pengujian Service untuk Produk", () => {
     });
 
     describe("Update produk", () => {
-        it("seharusnya berhasil memperbarui produk", async () => {
+        test("seharusnya berhasil memperbarui produk", async () => {
             const product = await prismaClient.product.create({
                 data: {
                     name: "Produk Lama",
@@ -101,7 +102,7 @@ describe("Pengujian Service untuk Produk", () => {
             expect(response.body.data).toHaveProperty('price', 30000);
         });
 
-        it("seharusnya gagal memperbarui jika produk tidak ditemukan", async () => {
+        test("seharusnya gagal memperbarui jika produk tidak ditemukan", async () => {
             const response = await supertest(app)
                 .put('/api/product/update-product/9999')
                 .send({
@@ -113,13 +114,11 @@ describe("Pengujian Service untuk Produk", () => {
                 });
 
             expect(response.status).toBe(400);
-            // expect(response.body.message).toBe("failed to update product");
         });
     });
 
     describe("Hapus produk", () => {
-        it("seharusnya berhasil menghapus produk", async () => {
-
+        test("seharusnya berhasil menghapus produk", async () => {
             const product = await prismaClient.product.create({
                 data: {
                     name: "Produk Hapus",
@@ -142,7 +141,7 @@ describe("Pengujian Service untuk Produk", () => {
             expect(deletedProduct).toBeNull();
         });
 
-        it("seharusnya gagal menghapus produk jika produk tidak ditemukan", async () => {
+        test("seharusnya gagal menghapus produk jika produk tidak ditemukan", async () => {
             const response = await supertest(app)
                 .delete('/api/product/delete-product/9999');
 
@@ -151,7 +150,7 @@ describe("Pengujian Service untuk Produk", () => {
     });
 
     describe("Detail produk", () => {
-        it("seharusnya mengembalikan detail produk jika produk ditemukan", async () => {
+        test("seharusnya mengembalikan detail produk jika produk ditemukan", async () => {
 
             const product = await prismaClient.product.create({
                 data: {
@@ -169,7 +168,7 @@ describe("Pengujian Service untuk Produk", () => {
             expect(response.status).toBe(200);
         });
 
-        it("seharusnya mengembalikan error jika produk tidak ditemukan", async () => {
+        test("seharusnya mengembalikan error jika produk tidak ditemukan", async () => {
             const response = await supertest(app)
                 .get('/api/product/detail/9999');
 

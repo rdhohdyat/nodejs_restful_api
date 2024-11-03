@@ -13,7 +13,7 @@ describe("Pengujian service untuk user", function () {
             });
         });
 
-        it('Berhasil mendaftarkan user baru', async () => {
+        test('Berhasil mendaftarkan user baru', async () => {
             const result = await supertest(app)
                 .post('/api/users/register')
                 .send({
@@ -30,7 +30,7 @@ describe("Pengujian service untuk user", function () {
             expect(result.body.data.password).toBeUndefined();
         });
 
-        it('Gagal mendaftarkan akun ketika inputan kosong', async () => {
+        test('Gagal mendaftarkan akun ketika inputan kosong', async () => {
             const result = await supertest(app)
                 .post('/api/users/register')
                 .send({
@@ -46,7 +46,7 @@ describe("Pengujian service untuk user", function () {
             expect(result.body.error).toBeDefined();
         });
 
-        it('Gagal mendaftarkan akun sudah terdaftar', async () => {
+        test('Gagal mendaftarkan akun sudah terdaftar', async () => {
             let result = await supertest(app)
                 .post('/api/users/register')
                 .send({
@@ -98,7 +98,7 @@ describe("Pengujian service untuk user", function () {
             });
         });
 
-        it("Berhasil melakukan login", async () => {
+        test("Berhasil melakukan login", async () => {
             const result = await supertest(app)
                 .post('/api/users/login')
                 .send({
@@ -114,7 +114,7 @@ describe("Pengujian service untuk user", function () {
             expect(result.body.data.token).not.toBe("test");
         })
 
-        it("Gagal melakukan login saat inputan tidak valid", async () => {
+        test("Gagal melakukan login saat inputan tidak valid", async () => {
             const result = await supertest(app)
                 .post('/api/users/login')
                 .send({
@@ -130,7 +130,7 @@ describe("Pengujian service untuk user", function () {
     })
 
     describe('Mengambil data user', function () {
-        it('Berhasil mendapatkan daftar user', async () => {
+        test('Berhasil mendapatkan daftar user', async () => {
             const result = await supertest(app)
                 .get('/api/users')
                 .expect(200);

@@ -36,7 +36,6 @@ const createSale = async (request) => {
     };
 };
 
-// Get all sales
 const getAllSales = async () => {
     const sales = await prismaClient.sale.findMany({
         include: {
