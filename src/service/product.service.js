@@ -21,7 +21,8 @@ const createProduct = async (request) => {
         select : {
             name: true,
             description: true,
-            price: true
+            price: true,
+            image: true
         }
     })
 }
