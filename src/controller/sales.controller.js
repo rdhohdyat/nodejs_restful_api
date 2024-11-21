@@ -31,3 +31,7 @@ export const getAllSales = async (req, res) => {
     data: sales || "product is empty",
   });
 };
+
+export const deleteSales = async (req, res) => {
+   
+}

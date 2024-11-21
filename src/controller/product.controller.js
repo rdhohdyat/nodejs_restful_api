@@ -22,8 +22,8 @@ export const createProduct = async (req, res) => {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-   const file = req.files.image;
-   const imageUrl = await fileService.processFileUpload(file, req, "product");
+    const file = req.files.image;
+    const imageUrl = await fileService.processFileUpload(file, req, "product");
 
     const productData = {
       ...req.body,
@@ -36,7 +36,6 @@ export const createProduct = async (req, res) => {
       message: "Product created successfully",
       data: product,
     });
-
   } catch (err) {
     return res.status(500).json({
       message: "An error occurred",
@@ -47,10 +46,25 @@ export const createProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   try {
+    const file = req.files ? req.files.image : null
+
+    const product = await productService.detailProduct(req.params.id)
+
+    if(!product){
+      return res.status(400).json({message : "Product not found"})
+    }
+
+    let imageUrl = product.image
+
+    if(file){
+      imageUrl = await fileService.updateFileUpload(file,req, "product", product.image.split("/").pop());
+    }
+
     const productUpdate = await productService.updateProduct(
-      req.body,
+      {...req.body, image: imageUrl},
       req.params.id
     );
+    
     return res.status(200).json({
       message: "update product is successfully",
       data: productUpdate,
@@ -65,14 +79,37 @@ export const updateProduct = async (req, res) => {
 
 export const deleteProduct = async (req, res) => {
   try {
-    const deleteProduct = await productService.deleteProduct(req.params.id);
+    const product = await productService.detailProduct(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    if (product.image) {
+      const fileName = product.image.split("/").pop();
+      const fileDeleted = await fileService.deleteFile(
+        req,
+        "product",
+        fileName
+      );
+
+      if (!fileDeleted) {
+        return res.status(500).json({
+          message: "Failed to delete the image file",
+        });
+      }
+    }
+
+    await productService.deleteProduct(req.params.id);
 
     return res.status(200).json({
-      message: "delete product is successfully",
+      message: "Product deleted successfully",
     });
   } catch (err) {
-    return res.status(400).json({
-      message: "failed to delete this product",
+    return res.status(500).json({
+      message: "Failed to delete the product",
       error: err.message,
     });
   }
