@@ -22,16 +22,13 @@ export const getAllSales = async (req, res) => {
 
   if (sales.length < 1) {
     return res.status(200).json({
-      message: "Product is empty, please create product",
+      message: "sale is empty, please create a sale",
     });
   }
+
   return res.status(200).json({
     status: "success",
-    message: "sales list is successfully",
-    data: sales || "product is empty",
+    message: "get all sales",
+    data: sales,
   });
 };
-
-export const deleteSales = async (req, res) => {
-   
-}

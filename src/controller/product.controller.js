@@ -10,6 +10,12 @@ export const getAllProducts = async (req, res) => {
     });
   }
 
+  if(products.length > 0){
+    return res.status(200).json({
+      message : "Product is empty, please create a product"
+    })
+  }
+
   return res.status(200).json({
     message: "Get all products",
     data: products,
