@@ -10,7 +10,7 @@ export const getAllProducts = async (req, res) => {
     });
   }
 
-  if(products.length > 0){
+  if(products.length < 1){
     return res.status(200).json({
       message : "Product is empty, please create a product"
     })
